@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <!--防止图片403-->
+    <title>随机图片</title>
+    <style>
+        @media (min-width: 768px) {
+            .container {
+                max-width: 740px;
+            }
+            .col-sm-4 {
+                float: left;
+                width: 33.33333333%;
+            }
+        }
+        @media (min-width: 992px) {
+            .container {
+                max-width: 960px;
+            }
+        }
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1160px;
+            }
+            .col-lg-3 {
+                float: left;
+                width: 25%;
+            }
+        }
+        .container {
+            padding-right: 10px;
+            padding-left: 10px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        .row {
+            margin-right: -10px;
+            margin-left: -10px;
+        }
+        .item {
+            box-sizing: border-box;
+            padding: 5px 5px;
+        }
+        .img-thumbnail {
+            display: inline-block;
+            max-width: 100%;
+            height: auto;
+            padding: 4px;
+            line-height: 1.53846154;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            -webkit-transition: all .2s ease-in-out;
+            -o-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row masonry">
+            {{if images.length <= 0}} 
+            <div style="text-align: center;">
+                <img data-toggle="lightbox" src="https://i02piccdn.sogoucdn.com/34824091fdee4c60"
+                    data-image="https://i02piccdn.sogoucdn.com/34824091fdee4c60" class="img-thumbnail">
+            </div>
+            {{/if}}
+            {{each images}}
+            <div class="col-lg-3 col-sm-4 item">
+                <img data-toggle="lightbox" src="{{$value.src}}" alt="{{$value.alt}}" class="img-thumbnail"
+                    data-group="image-group">
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    <h3 style="position: absolute;right: 10px;bottom: 10px;">@Money</h3>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.js"></script>
+<script>
+    $(function () {
+        var $container = $('.masonry');
+        $container.imagesLoaded(function () {
+            $container.masonry({
+                itemSelector: '.item',
+                isAnimated: true,
+                nimationOptions: {
+                    duration: 750,
+                    easing: 'linear',
+                    queue: false
+                },
+                gutterWidth: 15,
+                sFitWidth: true, //自适应宽度
+                isResizableL: true, // 是否可调整大小
+            });
+        });
+    });
+</script>
+
+</html>

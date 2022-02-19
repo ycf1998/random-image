@@ -30,7 +30,7 @@ class Baidu {
     queryParams = ''
     cache = []
 
-    static async bulide() {
+    static async bulid() {
         return await new Promise(async (resolve, reject) => {
             let baidu = new Baidu();
             const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
@@ -103,7 +103,7 @@ class Souhu {
     queryParams = ''
     cache = []
 
-    static async bulide() {
+    static async bulid() {
         let souhu = new Souhu();
         let example = 'https://pic.sogou.com/napi/pc/searchList?mode=1&start=48&xml_len=48&query=%E6%96%B0%E5%9E%A3%E7%BB%93%E8%A1%A3';
         souhu.queryParams = Tool.getQueryParams(example);
@@ -154,9 +154,9 @@ class QuanJing {
     queryParams = ''
     cache = []
 
-    static async bulide() {
+    static async bulid() {
         let quanjing = new QuanJing();
-        let example = 'https://www.quanjing.com/Handler/SearchUrl.ashx?t=7180&callback=searchresult&q=%E5%8A%A8%E6%BC%AB&stype=1&pagesize=100&pagenum=1&imageType=2&imageColor=&brand=&imageSType=&fr=1&sortFlag=1&imageUType=&btype=&authid=&_=1633083694148';
+        let example = 'https://www.quanjing.com/Handler/SearchUrl.ashx?t=5256&callback=searchresult&q=%E5%AE%B6%E5%BA%AD&stype=1&pagesize=100&pagenum=1&imageType=2&imageColor=&brand=&imageSType=&fr=1&sortFlag=1&imageUType=&btype=&authid=&_=1645254853065';
         quanjing.queryParams = Tool.getQueryParams(example);
         return quanjing;
     }
@@ -178,7 +178,8 @@ class QuanJing {
             const page = await browser.newPage();
             await page.goto('https://www.quanjing.com/');
             let res = await page.evaluate((url) => {
-            return fetch(url).then(res => res.text());
+                console.log(url)
+                return fetch(url).then(res => res.text());
             }, this.url(word))
             res = JSON.parse(res.match(/searchresult\((.*)\)/)[1])
             browser.close();
@@ -204,16 +205,16 @@ let quanjingSpider;
 let souhuSpider;
 
 (async () => {
-    baiduSpider = await Baidu.bulide();
-    quanjingSpider = await QuanJing.bulide();
-    souhuSpider = await Souhu.bulide();
+    baiduSpider = await Baidu.bulid();
+    quanjingSpider = await QuanJing.bulid();
+    souhuSpider = await Souhu.bulid();
     console.log('Are you ready!')
 })()
 
 let last = new Date().getTime();
 http.createServer(async (req, res) => {
     if (req.url.includes('favicon')) {
-        res.end(fs.readFileSync('./favicon.ico'))
+        res.end(fs.readFileSync(__dirname + '/favicon.ico'))
         return;
     }
     let params = Tool.getQueryParams(req.url);
@@ -227,7 +228,8 @@ http.createServer(async (req, res) => {
         images.push( ...await quanjingSpider.spider(params.w));
         images.push( ...await souhuSpider.spider(params.w));
     }
-    let html = fs.readFileSync('./index.html')
+    console.log(`加载完成`);
+    let html = fs.readFileSync(__dirname + '/index.html')
     let body = template.render(html.toString(), {images: shufflefy(images)});
     res.setHeader('Content-Type', 'text/html;charset=utf-8')
     res.end(body)
