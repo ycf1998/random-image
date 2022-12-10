@@ -4,3 +4,16 @@
 
 ![image-20220219161702902](README.assets/image-20220219161702902.png)
 
+# 使用说明
+1. clone代码
+  ~~~shell
+  git clone https://github.com/ycf1998/random-image.git
+  ~~~
+2. 安装依赖
+  ~~~shell
+  npm install
+  ~~~
+3. 启动
+  ~~~shell
+  node src/random-image-app.js
+  ~~~
